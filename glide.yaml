@@ -1,0 +1,28 @@
+package: github.com/giantswarm/k8s-kvm-health
+import:
+- package: github.com/giantswarm/flannel-network-health
+  subpackages:
+  - flag/service
+  - flag/service/network
+- package: github.com/giantswarm/microendpoint
+  subpackages:
+  - endpoint/healthz
+  - endpoint/version
+  - service/healthz
+  - service/version
+- package: github.com/giantswarm/microerror
+- package: github.com/giantswarm/microkit
+  subpackages:
+  - command
+  - flag
+  - server
+  - transaction
+- package: github.com/giantswarm/micrologger
+- package: github.com/giantswarm/microstorage
+  subpackages:
+  - memory
+- package: github.com/go-kit/kit
+  subpackages:
+  - transport/http
+- package: github.com/sparrc/go-ping
+- package: github.com/spf13/viper

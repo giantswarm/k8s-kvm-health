@@ -1,0 +1,3 @@
+package: github.com/giantswarm/flannel-network-health
+import:
+- package: github.com/giantswarm/micrologger
