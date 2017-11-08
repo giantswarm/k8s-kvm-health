@@ -1,5 +1,5 @@
-hash: e2936aa64b5fda88b30e1f62da67708e52e418b1d056cd7136f635ec4566360b
-updated: 2017-11-07T13:23:27.055375411+01:00
+hash: 6e7a862b8510f18320bdda8ee9de72faf0589fe48da181d27b8ac92cb45401df
+updated: 2017-11-08T10:15:54.820824454+01:00
 imports:
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
@@ -11,11 +11,6 @@ imports:
   - semver
 - name: github.com/fsnotify/fsnotify
   version: 4da3e2cfbabc9f751898f250b49f2439785783a1
-- name: github.com/giantswarm/flannel-network-health
-  version: 3b77d6fa5249b809d719c4d99efcd45f6991dce7
-  subpackages:
-  - flag/service
-  - flag/service/network
 - name: github.com/giantswarm/microendpoint
   version: b93a1e9b89c26ba3bdcd5d19986d550fd090d213
   subpackages:

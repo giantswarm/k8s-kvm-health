@@ -38,7 +38,7 @@ func (c *Config) LoadFlannelConfig() error {
 	return nil
 }
 
-// fetch ENVs values and read kvm file
+// readFlannelFile fetches ENVs values and read kvm file
 func (c *Config) readFlannelFile() ([]byte, error) {
 	fileContent, err := ioutil.ReadFile(c.Flag.Service.FlannelFile)
 	if err != nil {
@@ -48,14 +48,14 @@ func (c *Config) readFlannelFile() ([]byte, error) {
 	return fileContent, nil
 }
 
-// parse kvm configuration file and generate ips for interface
+// parseIPs parses kvm configuration file and generate ips for interface
 func (c *Config) parseIPs(confFile []byte) error {
 	// get FLANNEL_SUBNET from kvm file via regexp
 	r, _ := regexp.Compile("FLANNEL_SUBNET=[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")
 	flannelLine := r.Find(confFile)
 	// check if regexp returned non-empty line
 	if len(flannelLine) < 5 {
-		return microerror.Mask(invalidFlannelConfigurationError)
+		return microerror.Mask(invalidKVMConfigurationError)
 	}
 
 	// parse kvm subnet
@@ -74,7 +74,7 @@ func (c *Config) parseIPs(confFile []byte) error {
 	return nil
 }
 
-// wait for kvm file
+// waitForFlannelFile waits until flannel file is created
 func (c *Config) waitForFlannelFile(newLogger micrologger.Logger) error {
 	// wait for file creation
 	for count := 0; ; count++ {

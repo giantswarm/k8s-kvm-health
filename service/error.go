@@ -17,10 +17,10 @@ func IsInvalidFlannelFile(err error) bool {
 	return microerror.Cause(err) == invalidFlannelFileError
 }
 
-var invalidFlannelConfigurationError = microerror.New("invalid kvm configuration")
+var invalidKVMConfigurationError = microerror.New("invalid kvm configuration")
 
-func IsInvalidFlannelConfiguration(err error) bool {
-	return microerror.Cause(err) == invalidFlannelConfigurationError
+func IsInvalidKVMConfiguration(err error) bool {
+	return microerror.Cause(err) == invalidKVMConfigurationError
 }
 
 var failedParsingFlannelSubnetError = microerror.New("failed parsing kvm file")

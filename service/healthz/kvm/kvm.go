@@ -12,7 +12,7 @@ import (
 
 const (
 	// Description describes which functionality this health check implements.
-	Description = "Ensure kvm is responding to the assigned ip."
+	Description = "Ensure KVM is responding to the assigned ip."
 	// Name is the identifier of the health check. This can be used for emitting
 	// metrics.
 	Name = "kvmHealthz"
@@ -99,7 +99,7 @@ func (s *Service) healthCheck() (bool, string) {
 	pinger.OnRecv = func(pkt *ping.Packet) {
 		// we got positive response
 		failed = false
-		message = fmt.Sprintf("Healthcheck for KVM has been sucesfull. KVM is live and resonding. on %s.", s.ip)
+		message = fmt.Sprintf("Healthcheck for KVM has been successful. KVM is live and responding. on %s.", s.ip)
 	}
 
 	pinger.Run()

@@ -1,26 +1,15 @@
 package: github.com/giantswarm/k8s-kvm-health
 import:
-- package: github.com/giantswarm/flannel-network-health
-  subpackages:
-  - flag/service
-  - flag/service/network
 - package: github.com/giantswarm/microendpoint
-  subpackages:
-  - endpoint/healthz
-  - endpoint/version
-  - service/healthz
-  - service/version
+  version: master
 - package: github.com/giantswarm/microerror
+  version: master
 - package: github.com/giantswarm/microkit
-  subpackages:
-  - command
-  - flag
-  - server
-  - transaction
+  version: master
 - package: github.com/giantswarm/micrologger
+  version: master
 - package: github.com/giantswarm/microstorage
-  subpackages:
-  - memory
+  version: master
 - package: github.com/go-kit/kit
   subpackages:
   - transport/http

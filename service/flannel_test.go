@@ -56,7 +56,7 @@ FLANNEL_IPMASQ=false`),
 			flannelFileContent: []byte(`FLANNEL_NETWORK=192.168.0.0/24
 FLANNEL_MTU=1450
 FLANNEL_IPMASQ=false`),
-			expectedErr: invalidFlannelConfigurationError,
+			expectedErr: invalidKVMConfigurationError,
 		},
 		// test 3 - invalid subnet in kvm file
 		{
@@ -71,7 +71,7 @@ FLANNEL_IPMASQ=false`),
 FLANNEL_SUBNET=_x.68.c.0/30
 FLANNEL_MTU=1450
 FLANNEL_IPMASQ=false`),
-			expectedErr: invalidFlannelConfigurationError,
+			expectedErr: invalidKVMConfigurationError,
 		},
 		// test 4 - empty kvm file
 		{
@@ -83,7 +83,7 @@ FLANNEL_IPMASQ=false`),
 			},
 			expectedIP:         "",
 			flannelFileContent: []byte(``),
-			expectedErr:        invalidFlannelConfigurationError,
+			expectedErr:        invalidKVMConfigurationError,
 		},
 		// test 5 - non kvm file
 		{
@@ -105,7 +105,7 @@ dependencies:
     - chmod +x ./architect
     - ./architect version
 `),
-			expectedErr: invalidFlannelConfigurationError,
+			expectedErr: invalidKVMConfigurationError,
 		},
 	}
 
