@@ -34,7 +34,7 @@
   name = "github.com/giantswarm/microerror"
 
 [[constraint]]
-  branch = "improve-signal-handling"
+  branch = "master"
   name = "github.com/giantswarm/microkit"
 
 [[constraint]]

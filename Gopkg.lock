@@ -37,7 +37,7 @@
   revision = "3bc3cb1a36700aa4bbfcf6c335bc2ab92ad66d8d"
 
 [[projects]]
-  branch = "improve-signal-handling"
+  branch = "master"
   name = "github.com/giantswarm/microkit"
   packages = [
     "command",
@@ -55,7 +55,7 @@
     "server",
     "tls"
   ]
-  revision = "f823160baa78098e4262f3e37ae4468f2764efe7"
+  revision = "aaff79223ca0620a1b6506f0b598da59557659e6"
 
 [[projects]]
   branch = "master"
@@ -317,6 +317,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cefd1542c6db49f55fd9e00697c98421ccf9fff90e9c546ab7f7dd8f1127a8b6"
+  inputs-digest = "e8d968d49c2b1483368e94fd81e02195f966f0947dbcc4eec484f68a7bdc0938"
   solver-name = "gps-cdcl"
   solver-version = 1
