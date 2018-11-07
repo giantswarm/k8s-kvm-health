@@ -11,8 +11,6 @@ import (
 	"github.com/giantswarm/micrologger"
 	"github.com/spf13/viper"
 	"os"
-	"os/signal"
-	"syscall"
 )
 
 var (
@@ -24,17 +22,6 @@ var (
 )
 
 func main() {
-	signalChannel := make(chan os.Signal, 2)
-	signal.Notify(signalChannel, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		sig := <-signalChannel
-		switch sig {
-		case syscall.SIGTERM:
-			fmt.Printf("Caught SIGTERM, exiting\n")
-			os.Exit(0)
-		}
-	}()
-
 	err := mainWithError()
 	if err != nil {
 		panic(fmt.Sprintf("%#v\n", microerror.Mask(err)))
