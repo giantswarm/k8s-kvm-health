@@ -123,5 +123,5 @@ func (s *Service) apiHealthCheck() (bool, string) {
 
 	message = fmt.Sprintf("Healthcheck for k8s API has been successful. K8s is live and responding. on %s.", url)
 	// exit
-	return true, message
+	return false, message
 }
