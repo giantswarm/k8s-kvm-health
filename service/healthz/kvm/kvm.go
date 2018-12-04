@@ -8,6 +8,7 @@ import (
 	"github.com/giantswarm/micrologger"
 	"github.com/sparrc/go-ping"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -19,7 +20,11 @@ const (
 	Name = "kvmHealthz"
 
 	// config
-	pingCount = 1
+	pingCount      = 1
+	httpsScheme    = "https"
+	httpScheme     = "http"
+	k8sAPIPort     = 443
+	k8sKubeletPort = 10248
 )
 
 // Config represents the configuration used to create a healthz service.
@@ -63,7 +68,9 @@ func New(config Config) (*Service, error) {
 
 // GetHealthz implements the health check for network interface.
 func (s *Service) GetHealthz(ctx context.Context) (healthz.Response, error) {
-	pingFailed, pingMsg := s.pingHealthCheck()
+	var apiFailed, kubeletFailed, pingFailed bool
+	var apiMsg, kubeletMsg, pingMsg string
+	pingFailed, pingMsg = s.pingHealthCheck()
 
 	response := healthz.Response{
 		Description: Description,
@@ -72,9 +79,16 @@ func (s *Service) GetHealthz(ctx context.Context) (healthz.Response, error) {
 		Name:        Name,
 	}
 
-	// check api only if ping succeeded
-	if !pingFailed && s.checkAPI {
-		apiFailed, apiMsg := s.apiHealthCheck()
+	// check kubelet only if ping succeeded
+	if !pingFailed {
+		kubeletFailed, kubeletMsg = s.httpHealthCheck(k8sKubeletPort, httpScheme)
+		response.Failed = kubeletFailed
+		response.Message += kubeletMsg
+	}
+
+	// check api only if ping and kubelet succeeded
+	if !pingFailed && !kubeletFailed && s.checkAPI {
+		apiFailed, apiMsg = s.httpHealthCheck(k8sAPIPort, httpsScheme)
 		response.Failed = apiFailed
 		response.Message += apiMsg
 	}
@@ -110,18 +124,22 @@ func (s *Service) pingHealthCheck() (bool, string) {
 	return failed, message
 }
 
-// implementation of the interface healthz logic for k8s api check
-func (s *Service) apiHealthCheck() (bool, string) {
+// implementation of the interface healthz logic for http  check
+func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 	var message string
-	url := fmt.Sprintf("https://%s/healthz", s.ip)
-	// send request to k8s API
-	_, err := http.Get(url)
+	u := url.URL{
+		Host:   fmt.Sprintf("%s:%d", s.ip, port),
+		Path:   "healthz",
+		Scheme: scheme,
+	}
+	// send request to http endpoint
+	_, err := http.Get(u.String())
 	if err != nil {
-		message = fmt.Sprintf("Failed to send http request to k8s API. %s", err)
+		message = fmt.Sprintf("Failed to send http request to endpoint %s. %s", u.String(), err)
 		return true, message
 	}
 
-	message = fmt.Sprintf("Healthcheck for k8s API has been successful. K8s is live and responding. on %s.", url)
+	message = fmt.Sprintf("Healthcheck for http endpoint %s has been successful.", u.String())
 	// exit
 	return false, message
 }
