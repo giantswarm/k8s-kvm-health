@@ -10,6 +10,7 @@ import (
 // Config represents the configuration used to create a healthz service.
 type Config struct {
 	// Dependencies.
+	CheckAPI  bool
 	IPAddress string
 	Logger    micrologger.Logger
 }
@@ -30,9 +31,10 @@ func New(config Config) (*Service, error) {
 
 	var kvmService healthz.Service
 	{
-		kvmServiceConfig := kvm.DefaultConfig()
+		var kvmServiceConfig kvm.Config
 		kvmServiceConfig.IP = config.IPAddress
 		kvmServiceConfig.Logger = config.Logger
+		kvmServiceConfig.CheckAPI = config.CheckAPI
 		kvmService, err = kvm.New(kvmServiceConfig)
 		if err != nil {
 			return nil, microerror.Mask(err)
