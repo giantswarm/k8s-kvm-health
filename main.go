@@ -32,7 +32,7 @@ func readEnv() error {
 	// load conf from ENV
 	f.Service.FlannelFile = os.Getenv("NETWORK_ENV_FILE_PATH")
 	f.Service.ListenAddress = os.Getenv("LISTEN_ADDRESS")
-	if os.Getenv("CHECK_API") == "true" {
+	if os.Getenv("CHECK_K8S_API") == "true" {
 		f.Service.CheckAPI = true
 	} else {
 		f.Service.CheckAPI = false
