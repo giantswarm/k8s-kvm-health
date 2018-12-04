@@ -7,6 +7,7 @@ import (
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 	"github.com/sparrc/go-ping"
+	"net/http"
 	"time"
 )
 
@@ -24,25 +25,17 @@ const (
 // Config represents the configuration used to create a healthz service.
 type Config struct {
 	// Dependencies.
-	IP     string
-	Logger micrologger.Logger
-}
-
-// DefaultConfig provides a default configuration to create a new healthz service
-// by best effort.
-func DefaultConfig() Config {
-	return Config{
-		// Dependencies.
-		IP:     "",
-		Logger: nil,
-	}
+	CheckAPI bool
+	IP       string
+	Logger   micrologger.Logger
 }
 
 // Service implements the healthz service interface.
 type Service struct {
 	// Dependencies.
-	ip     string
-	logger micrologger.Logger
+	checkAPI bool
+	ip       string
+	logger   micrologger.Logger
 
 	// Settings.
 	timeout time.Duration
@@ -60,8 +53,9 @@ func New(config Config) (*Service, error) {
 
 	newService := &Service{
 		// Dependencies.
-		ip:     config.IP,
-		logger: config.Logger,
+		checkAPI: config.CheckAPI,
+		ip:       config.IP,
+		logger:   config.Logger,
 	}
 
 	return newService, nil
@@ -69,20 +63,27 @@ func New(config Config) (*Service, error) {
 
 // GetHealthz implements the health check for network interface.
 func (s *Service) GetHealthz(ctx context.Context) (healthz.Response, error) {
-	failed, message := s.healthCheck()
+	pingFailed, pingMsg := s.pingHealthCheck()
 
 	response := healthz.Response{
 		Description: Description,
-		Failed:      failed,
-		Message:     message,
+		Failed:      pingFailed,
+		Message:     pingMsg,
 		Name:        Name,
+	}
+
+	// check api only if ping succeeded
+	if !pingFailed && s.checkAPI {
+		apiFailed, apiMsg := s.apiHealthCheck()
+		response.Failed = apiFailed
+		response.Message += apiMsg
 	}
 
 	return response, nil
 }
 
-// implementation fo the interface healthz logic
-func (s *Service) healthCheck() (bool, string) {
+// implementation fo the interface healthz logic for ping check
+func (s *Service) pingHealthCheck() (bool, string) {
 	var message string
 	// ping kvm
 	pinger, err := ping.NewPinger(s.ip)
@@ -107,4 +108,20 @@ func (s *Service) healthCheck() (bool, string) {
 
 	// exit
 	return failed, message
+}
+
+// implementation of the interface healthz logic for k8s api check
+func (s *Service) apiHealthCheck() (bool, string) {
+	var message string
+	url := fmt.Sprintf("https://%s", s.ip)
+	// send request to k8s API
+	_, err := http.Get(url)
+	if err != nil {
+		message = fmt.Sprintf("Failed to send http request to k8s API. %s", err)
+		return true, message
+	}
+
+	message = fmt.Sprintf("Healthcheck for k8s API has been successful. K8s is live and responding. on %s.", url)
+	// exit
+	return true, message
 }
