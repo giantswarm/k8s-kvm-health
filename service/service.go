@@ -62,7 +62,11 @@ func New(config Config) (*Service, error) {
 	{
 		healthzConfig := healthz.DefaultConfig()
 
-		healthzConfig.CheckAPI = config.Flag.Service.CheckAPI
+		if config.Flag.Service.CheckAPI == "true" {
+			healthzConfig.CheckAPI = true
+		} else {
+			healthzConfig.CheckAPI = false
+		}
 		healthzConfig.IPAddress = config.Flag.Service.IPAddress
 		healthzConfig.Logger = config.Logger
 

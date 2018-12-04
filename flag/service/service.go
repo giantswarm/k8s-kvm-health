@@ -1,7 +1,7 @@
 package service
 
 type Service struct {
-	CheckAPI      bool
+	CheckAPI      string
 	FlannelFile   string
 	ListenAddress string
 	IPAddress     string

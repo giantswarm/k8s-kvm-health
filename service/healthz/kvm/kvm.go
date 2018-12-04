@@ -113,7 +113,7 @@ func (s *Service) pingHealthCheck() (bool, string) {
 // implementation of the interface healthz logic for k8s api check
 func (s *Service) apiHealthCheck() (bool, string) {
 	var message string
-	url := fmt.Sprintf("https://%s", s.ip)
+	url := fmt.Sprintf("https://%s/healthz", s.ip)
 	// send request to k8s API
 	_, err := http.Get(url)
 	if err != nil {
