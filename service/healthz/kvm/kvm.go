@@ -68,9 +68,9 @@ func New(config Config) (*Service, error) {
 
 // GetHealthz Provides Healthz implementation to check health status of network
 // interface. It performs following checks in given order:
-//  - Ping configured IP. 
+//  - Ping configured IP.
 //  - Check that Kubelet instance in configured IP responds to HTTP request.
-//  - Check that K8s API in configured IP responds to HTTPS request. 
+//  - Check that K8s API in configured IP responds to HTTPS request.
 func (s *Service) GetHealthz(ctx context.Context) (healthz.Response, error) {
 	var apiFailed, kubeletFailed, pingFailed bool
 	var apiMsg, kubeletMsg, pingMsg string
@@ -100,7 +100,6 @@ func (s *Service) GetHealthz(ctx context.Context) (healthz.Response, error) {
 	return response, nil
 }
 
-// implementation fo the interface healthz logic for ping check
 func (s *Service) pingHealthCheck() (bool, string) {
 	var message string
 	// ping kvm
@@ -128,7 +127,6 @@ func (s *Service) pingHealthCheck() (bool, string) {
 	return failed, message
 }
 
-// implementation of the interface healthz logic for http  check
 func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 	var message string
 	u := url.URL{

@@ -15,26 +15,18 @@ type Config struct {
 	Logger    micrologger.Logger
 }
 
-// DefaultConfig provides a default configuration to create a new healthz
-// service by best effort.
-func DefaultConfig() Config {
-	return Config{
-		// Dependencies.
-		IPAddress: "",
-		Logger:    nil,
-	}
-}
-
 // New creates a new configured healthz service.
 func New(config Config) (*Service, error) {
 	var err error
 
 	var kvmService healthz.Service
 	{
-		var kvmServiceConfig kvm.Config
-		kvmServiceConfig.IP = config.IPAddress
-		kvmServiceConfig.Logger = config.Logger
-		kvmServiceConfig.CheckAPI = config.CheckAPI
+		kvmServiceConfig := kvm.Config{
+			CheckAPI: config.CheckAPI,
+			IP:       config.IPAddress,
+			Logger:   config.Logger,
+		}
+
 		kvmService, err = kvm.New(kvmServiceConfig)
 		if err != nil {
 			return nil, microerror.Mask(err)
