@@ -41,9 +41,10 @@ type Config struct {
 type Service struct {
 	// Dependencies.
 	checkAPI bool
+	client   *http.Client
 	ip       string
 	logger   micrologger.Logger
-	client   *http.Client
+	tr       *http.Transport
 
 	// Settings.
 	timeout time.Duration
@@ -59,12 +60,18 @@ func New(config Config) (*Service, error) {
 		return nil, microerror.Maskf(invalidConfigError, "config.Logger must not be empty")
 	}
 
+	tr := &http.Transport{
+		MaxConnsPerHost: maxIdleConnection,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
 	newService := &Service{
 		// Dependencies.
 		checkAPI: config.CheckAPI,
+		client:   &http.Client{Transport: tr},
 		ip:       config.IP,
 		logger:   config.Logger,
-		client:   &http.Client{},
+		tr:       tr,
 	}
 
 	return newService, nil
@@ -139,12 +146,7 @@ func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 		Scheme: scheme,
 	}
 	// be sure to close idle connection after health check is finished
-	tr := &http.Transport{
-		MaxConnsPerHost: maxIdleConnection,
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	defer tr.CloseIdleConnections()
-	s.client.Transport = tr
+	defer s.tr.CloseIdleConnections()
 	// send request to http endpoint
 	_, err := s.client.Get(u.String())
 	if err != nil {
