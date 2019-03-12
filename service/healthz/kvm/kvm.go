@@ -43,6 +43,7 @@ type Service struct {
 	checkAPI bool
 	ip       string
 	logger   micrologger.Logger
+	client   *http.Client
 
 	// Settings.
 	timeout time.Duration
@@ -63,6 +64,7 @@ func New(config Config) (*Service, error) {
 		checkAPI: config.CheckAPI,
 		ip:       config.IP,
 		logger:   config.Logger,
+		client:   &http.Client{},
 	}
 
 	return newService, nil
@@ -136,16 +138,15 @@ func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 		Path:   "healthz",
 		Scheme: scheme,
 	}
-	// we are accessing k8s api on machine IP, but as that ip is dynamic and not part of ssl so we need to skip TLS check
-	tr := &http.Transport{
-		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-		MaxIdleConnsPerHost: maxIdleConnection,
-	}
 	// be sure to close idle connection after health check is finished
+	tr := &http.Transport{
+		MaxConnsPerHost: maxIdleConnection,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 	defer tr.CloseIdleConnections()
-	client := &http.Client{Transport: tr}
+	s.client.Transport = tr
 	// send request to http endpoint
-	_, err := client.Get(u.String())
+	_, err := s.client.Get(u.String())
 	if err != nil {
 		message = fmt.Sprintf("Failed to send http request to endpoint %s. %s", u.String(), err)
 		return true, message
