@@ -21,11 +21,12 @@ const (
 	Name = "kvmHealthz"
 
 	// config
-	pingCount      = 1
-	httpsScheme    = "https"
-	httpScheme     = "http"
-	k8sAPIPort     = 443
-	k8sKubeletPort = 10248
+	pingCount         = 1
+	httpsScheme       = "https"
+	httpScheme        = "http"
+	k8sAPIPort        = 443
+	k8sKubeletPort    = 10248
+	maxIdleConnection = 10
 )
 
 // Config represents the configuration used to create a healthz service.
@@ -88,14 +89,14 @@ func (s *Service) GetHealthz(ctx context.Context) (healthz.Response, error) {
 	if !pingFailed {
 		kubeletFailed, kubeletMsg = s.httpHealthCheck(k8sKubeletPort, httpScheme)
 		response.Failed = kubeletFailed
-		response.Message += kubeletMsg
+		response.Message = kubeletMsg
 	}
 
 	// check api only if ping and kubelet succeeded
 	if !pingFailed && !kubeletFailed && s.checkAPI {
 		apiFailed, apiMsg = s.httpHealthCheck(k8sAPIPort, httpsScheme)
 		response.Failed = apiFailed
-		response.Message += apiMsg
+		response.Message = apiMsg
 	}
 
 	return response, nil
@@ -137,8 +138,11 @@ func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 	}
 	// we are accessing k8s api on machine IP, but as that ip is dynamic and not part of ssl so we need to skip TLS check
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+		MaxIdleConnsPerHost: maxIdleConnection,
 	}
+	// be sure to close idle connection after health check is finished
+	defer tr.CloseIdleConnections()
 	client := &http.Client{Transport: tr}
 	// send request to http endpoint
 	_, err := client.Get(u.String())
