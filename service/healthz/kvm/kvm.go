@@ -27,7 +27,7 @@ const (
 	k8sAPIPort        = 443
 	k8sKubeletPort    = 10248
 	maxIdleConnection = 10
-	maxTimeout        = 4
+	maxTimeoutSec     = 4
 )
 
 // Config represents the configuration used to create a healthz service.
@@ -63,10 +63,12 @@ func New(config Config) (*Service, error) {
 
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		MaxIdleConns:    maxIdleConnection,
 	}
 
 	client := &http.Client{
 		Transport: tr,
+		Timeout:   maxTimeoutSec * time.Second,
 	}
 
 	newService := &Service{
