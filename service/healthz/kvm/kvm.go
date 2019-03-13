@@ -147,8 +147,18 @@ func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 	}
 	// be sure to close idle connection after health check is finished
 	defer s.tr.CloseIdleConnections()
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic(fmt.Sprintf("unable to construct health check request: %q", err))
+	}
+
+	// close connection after health check request (the TCP connection gets
+	// closed by deferred s.tr.CloseIdleConnections()).
+	req.Header.Add("Connection", "close")
+
 	// send request to http endpoint
-	_, err := s.client.Get(u.String())
+	_, err = s.client.Do(req)
 	if err != nil {
 		message = fmt.Sprintf("Failed to send http request to endpoint %s. %s", u.String(), err)
 		return true, message
