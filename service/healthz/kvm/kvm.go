@@ -62,15 +62,11 @@ func New(config Config) (*Service, error) {
 	}
 
 	tr := &http.Transport{
-		MaxConnsPerHost:   maxIdleConnection,
-		TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
-		DisableKeepAlives: true,
-		IdleConnTimeout:   maxTimeout,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
 	client := &http.Client{
 		Transport: tr,
-		Timeout:   maxTimeout,
 	}
 
 	newService := &Service{
@@ -153,8 +149,13 @@ func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 		Path:   "healthz",
 		Scheme: scheme,
 	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 	// be sure to close idle connection after health check is finished
-	defer s.tr.CloseIdleConnections()
+	defer tr.CloseIdleConnections()
+
+	s.client.Transport = tr
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
