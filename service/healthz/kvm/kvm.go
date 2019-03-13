@@ -61,12 +61,8 @@ func New(config Config) (*Service, error) {
 		return nil, microerror.Maskf(invalidConfigError, "config.Logger must not be empty")
 	}
 
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-
 	client := &http.Client{
-		Transport: tr,
+		Timeout: maxTimeout,
 	}
 
 	newService := &Service{
@@ -75,7 +71,6 @@ func New(config Config) (*Service, error) {
 		client:   client,
 		ip:       config.IP,
 		logger:   config.Logger,
-		tr:       tr,
 	}
 
 	return newService, nil
@@ -151,6 +146,7 @@ func (s *Service) httpHealthCheck(port int, scheme string) (bool, string) {
 	}
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		MaxIdleConns:    maxIdleConnection,
 	}
 	// be sure to close idle connection after health check is finished
 	defer tr.CloseIdleConnections()
