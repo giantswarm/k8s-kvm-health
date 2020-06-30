@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/giantswarm/k8s-kvm-health/flag"
-	"github.com/giantswarm/k8s-kvm-health/server"
-	"github.com/giantswarm/k8s-kvm-health/service"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/microkit/command"
 	microserver "github.com/giantswarm/microkit/server"
 	"github.com/giantswarm/micrologger"
 	"github.com/spf13/viper"
+
+	"github.com/giantswarm/k8s-kvm-health/flag"
+	"github.com/giantswarm/k8s-kvm-health/server"
+	"github.com/giantswarm/k8s-kvm-health/service"
 )
 
 var (
