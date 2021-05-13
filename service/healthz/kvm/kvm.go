@@ -120,7 +120,7 @@ func (s *Service) pingHealthCheck() (bool, string) {
 	// ping kvm
 	pinger, err := ping.NewPinger(s.ip)
 	if err != nil {
-		message = fmt.Sprintf("Failed to init pinger.")
+		message = "Failed to init pinger."
 		return true, message
 	}
 	// set fail values

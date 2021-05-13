@@ -33,9 +33,10 @@ require (
 	github.com/spf13/cobra v0.0.3 // indirect
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/spf13/viper v1.2.1
-	golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f // indirect
-	golang.org/x/sys v0.0.0-20181106135930-3a76605856fd // indirect
 	gopkg.in/resty.v1 v1.12.0 // indirect
 )
 
-replace github.com/go-resty/resty => gopkg.in/resty.v1 v1.11.0
+replace (
+	github.com/go-resty/resty => gopkg.in/resty.v1 v1.11.0
+	github.com/gogo/protobuf v1.3.1 => github.com/gogo/protobuf v1.3.2
+)
