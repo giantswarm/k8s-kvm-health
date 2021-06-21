@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.14.0
 
 ADD ./k8s-kvm-health /k8s-kvm-health
 
