@@ -15,11 +15,9 @@ require (
 	github.com/spf13/cast v1.3.0 // indirect
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/spf13/viper v1.2.1
-	golang.org/x/net v0.0.0-20201021035429-f5854403a974 // indirect
-	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9 // indirect
 )
 
 replace (
 	github.com/go-resty/resty => gopkg.in/resty.v1 v1.11.0
-	github.com/gogo/protobuf v1.3.1 => github.com/gogo/protobuf v1.3.2
+	github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.2
 )
