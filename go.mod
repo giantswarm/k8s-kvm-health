@@ -20,4 +20,5 @@ require (
 replace (
 	github.com/go-resty/resty => gopkg.in/resty.v1 v1.11.0
 	github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.2
+	github.com/gorilla/websocket => github.com/gorilla/websocket v1.4.2
 )
