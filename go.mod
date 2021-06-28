@@ -12,7 +12,7 @@ require (
 	github.com/go-resty/resty v0.0.0-00010101000000-000000000000 // indirect
 	github.com/juju/errgo v0.0.0-20140925100237-08cceb5d0b53 // indirect
 	github.com/sparrc/go-ping v0.0.0-20181106165434-ef3ab45e41b0
-	github.com/spf13/viper v1.8.0
+	github.com/spf13/viper v1.8.1
 )
 
 replace (
