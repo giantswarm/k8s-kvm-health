@@ -54,13 +54,6 @@ func New(config Config) (*Service, error) {
 	}
 
 	var err error
-
-	// load kvm network configuration
-	err = config.LoadFlannelConfig()
-	if err != nil {
-		return nil, microerror.Mask(err)
-	}
-
 	var healthzService *healthz.Service
 	{
 		healthzConfig := healthz.Config{

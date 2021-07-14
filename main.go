@@ -32,11 +32,11 @@ func main() {
 
 func readEnv() error {
 	// load conf from ENV
-	f.Service.FlannelFile = os.Getenv("NETWORK_ENV_FILE_PATH")
+	f.Service.IPAddress = os.Getenv("IP_ADDRESS")
 	f.Service.ListenAddress = os.Getenv("LISTEN_ADDRESS")
 	f.Service.CheckAPI = os.Getenv("CHECK_K8S_API")
-	if f.Service.FlannelFile == "" {
-		return microerror.Maskf(invalidConfigError, "NETWORK_ENV_FILE_PATH must not be empty")
+	if f.Service.IPAddress == "" {
+		return microerror.Maskf(invalidConfigError, "IP_ADDRESS must not be empty")
 	}
 	if f.Service.ListenAddress == "" {
 		return microerror.Maskf(invalidConfigError, "LISTEN_ADDRESS must not be empty")
