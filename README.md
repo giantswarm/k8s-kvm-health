@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/giantswarm/k8s-kvm-health/tree/master.svg?style=shield)](https://circleci.com/gh/giantswarm/k8s-kvm-health/tree/master)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/giantswarm/k8s-kvm-health/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/giantswarm/k8s-kvm-health/tree/master)
+
 # k8s-kvm-health
 
 k8s-kvm-health serves as health endpoint for k8s-kvm pod created by [kvm-operator](https://github.com/giantswarm/kvm-operator).
